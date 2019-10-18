@@ -1,6 +1,6 @@
 # Brook
 
-[![Build Status](https://travis-ci.org/txthinking/brook.svg?branch=master)](https://travis-ci.org/txthinking/brook) [![Go Report Card](https://goreportcard.com/badge/github.com/txthinking/brook)](https://goreportcard.com/report/github.com/txthinking/brook) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/txthinking/brook/wiki)
+[![Build Status](https://travis-ci.org/txthinking/brook.svg?branch=master)](https://travis-ci.org/txthinking/brook) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/txthinking/brook/wiki)
 
 <p align="center">
     <img style="float: right;" src="https://storage.googleapis.com/txthinking-file/_/brook_200x200.png" alt="Brook"/>
@@ -8,58 +8,58 @@
 
 ---
 
-### v20180909
+### v20190601
 
-* VPN on Linux/MacOS/Windows, maybe you can use it for games [wiki](https://github.com/txthinking/brook/wiki/How-to-run-VPN-on-Linux,-MacOS-and-Windows%3F)
+- New macOS/Windows GUI client.
 
 ---
 
 ### Table of Contents
 
-* [What is Brook](#what-is-brook)
-* [Download](#download)
-* [Packages](#packages)
-* [**Server**](#server)
-* [**Client (CLI)**](#client-cli)
-* [**Client (GUI)**](#client-gui)
-* [Tunnel](#tunnel)
-* [Tproxy](#tproxy)
-* [VPN](#vpn)
-* [Relay](#relay)
-* [Socks5](#socks5)
-* [Socks5 to HTTP](#socks5-to-http)
-* [Shadowsocks](#shadowsocks)
-* [Contributing](#contributing)
-* [License](#license)
+- [What is Brook](#what-is-brook)
+- [Download](#download)
+- [Packages](#packages)
+- [**Server**](#server)
+- [**Client (CLI)**](#client-cli)
+- [**Client (GUI)**](#client-gui)
+- [Tunnel](#tunnel)
+- [Tproxy](#tproxy)
+- [VPN](#vpn)
+- [Relay](#relay)
+- [Socks5](#socks5)
+- [Socks5 to HTTP](#socks5-to-http)
+- [Shadowsocks](#shadowsocks)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## What is Brook
 
 Brook is a cross-platform proxy/vpn software.<br/>
-Brook's goal is to keep it simple, stupid and not detectable.
+Brook's goal is to keep it **simple**, **stupid** and **not detectable**.
 
 ## Download
 
-| Download | Server/Client | OS | Arch | Remark |
-| --- | --- | --- | --- | --- |
-| [brook](https://github.com/txthinking/brook/releases/download/v20180909/brook) | Server & Client | Linux | amd64 | CLI |
-| [brook_linux_386](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_386) | Server & Client | Linux | 386 | CLI |
-| [brook_linux_arm64](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_arm64) | Server & Client | Linux | arm64 | CLI |
-| [brook_linux_arm5](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_arm5) | Server & Client | Linux | arm5 | CLI |
-| [brook_linux_arm6](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_arm6) | Server & Client | Linux | arm6 | CLI |
-| [brook_linux_arm7](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_arm7) | Server & Client | Linux | arm7 | CLI |
-| [brook_linux_mips](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_mips) | Server & Client | Linux | mips | CLI |
-| [brook_linux_mipsle](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_mipsle) | Server & Client | Linux | mipsle | CLI |
-| [brook_linux_mips64](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_mips64) | Server & Client | Linux | mips64 | CLI |
-| [brook_linux_mips64le](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_mips64le) | Server & Client | Linux | mips64le | CLI |
-| [brook_linux_ppc64](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_ppc64) | Server & Client | Linux | ppc64 | CLI |
-| [brook_linux_ppc64le](https://github.com/txthinking/brook/releases/download/v20180909/brook_linux_ppc64le) | Server & Client | Linux | ppc64le | CLI |
-| [brook_darwin_amd64](https://github.com/txthinking/brook/releases/download/v20180909/brook_darwin_amd64) | Server & Client | MacOS | amd64 | CLI |
-| [brook_windows_amd64.exe](https://github.com/txthinking/brook/releases/download/v20180909/brook_windows_amd64.exe) | Server & Client | Windows | amd64 | CLI |
-| [brook_windows_386.exe](https://github.com/txthinking/brook/releases/download/v20180909/brook_windows_386.exe) | Server & Client | Windows | 386 | CLI |
-| [Brook.dmg](https://github.com/txthinking/brook/releases/download/v20180909/Brook.dmg) | Client | MacOS | amd64 | GUI |
-| [Brook.Setup.exe](https://github.com/txthinking/brook/releases/download/v20180909/Brook.Setup.exe) | Client | Windows | amd64 | GUI |
-| [App Store](https://itunes.apple.com/us/app/brook-brook-shadowsocks-vpn-proxy/id1216002642) | Client | iOS | - | GUI |
-| [Brook.apk](https://github.com/txthinking/brook/releases/download/v20180909/Brook.apk)(No Google Play) | Client | Android | - | GUI |
+| Download                                                                                                           | Server/Client   | OS      | Arch     | Remark |
+| ------------------------------------------------------------------------------------------------------------------ | --------------- | ------- | -------- | ------ |
+| [brook](https://github.com/txthinking/brook/releases/download/v20190601/brook)                                     | Server & Client | Linux   | amd64    | CLI    |
+| [brook_linux_386](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_386)                 | Server & Client | Linux   | 386      | CLI    |
+| [brook_linux_arm64](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_arm64)             | Server & Client | Linux   | arm64    | CLI    |
+| [brook_linux_arm5](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_arm5)               | Server & Client | Linux   | arm5     | CLI    |
+| [brook_linux_arm6](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_arm6)               | Server & Client | Linux   | arm6     | CLI    |
+| [brook_linux_arm7](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_arm7)               | Server & Client | Linux   | arm7     | CLI    |
+| [brook_linux_mips](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_mips)               | Server & Client | Linux   | mips     | CLI    |
+| [brook_linux_mipsle](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_mipsle)           | Server & Client | Linux   | mipsle   | CLI    |
+| [brook_linux_mips64](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_mips64)           | Server & Client | Linux   | mips64   | CLI    |
+| [brook_linux_mips64le](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_mips64le)       | Server & Client | Linux   | mips64le | CLI    |
+| [brook_linux_ppc64](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_ppc64)             | Server & Client | Linux   | ppc64    | CLI    |
+| [brook_linux_ppc64le](https://github.com/txthinking/brook/releases/download/v20190601/brook_linux_ppc64le)         | Server & Client | Linux   | ppc64le  | CLI    |
+| [brook_darwin_amd64](https://github.com/txthinking/brook/releases/download/v20190601/brook_darwin_amd64)           | Server & Client | MacOS   | amd64    | CLI    |
+| [brook_windows_amd64.exe](https://github.com/txthinking/brook/releases/download/v20190601/brook_windows_amd64.exe) | Server & Client | Windows | amd64    | CLI    |
+| [brook_windows_386.exe](https://github.com/txthinking/brook/releases/download/v20190601/brook_windows_386.exe)     | Server & Client | Windows | 386      | CLI    |
+| [Brook.dmg](https://github.com/txthinking/brook/releases/download/v20190601/Brook.dmg)                             | Client          | MacOS   | amd64    | GUI    |
+| [Brook.exe](https://github.com/txthinking/brook/releases/download/v20190601/Brook.exe)                             | Client          | Windows | amd64    | GUI    |
+| [App Store](https://itunes.apple.com/us/app/brook-brook-shadowsocks-vpn-proxy/id1216002642)                        | Client          | iOS     | -        | GUI    |
+| [Brook.apk](https://github.com/txthinking/brook/releases/download/v20190601/Brook.apk)(No Google Play)             | Client          | Android | -        | GUI    |
 
 **See [wiki](https://github.com/txthinking/brook/wiki) for more tutorials**
 
@@ -87,31 +87,29 @@ USAGE:
    brook [global options] command [command options] [arguments...]
 
 VERSION:
-   20180909
+   20190601
 
 AUTHOR:
    Cloud <cloud@txthinking.com>
 
 COMMANDS:
-     server         Run as server mode
-     servers        Run as multiple servers mode
-     client         Run as client mode
-     tunnel         Run as tunnel mode
-     tproxy         Run as tproxy mode, transparent proxy, only works on Linux
-     vpn            Run as VPN mode
-     streamserver   Run as server mode
-     streamservers  Run as multiple servers mode
-     streamclient   Run as client mode
-     ssserver       Run as shadowsocks server mode, fixed method is aes-256-cfb
-     ssservers      Run as shadowsocks multiple servers mode, fixed method is aes-256-cfb
-     ssclient       Run as shadowsocks client mode, fixed method is aes-256-cfb
-     socks5         Run as raw socks5 server
-     relay          Run as relay mode
-     relays         Run as multiple relays mode
-     qr             Print brook server QR code
-     socks5tohttp   Convert socks5 to http proxy
-     systemproxy    Set system proxy with pac url, or remove, only works on MacOS/Windows
-     help, h        Shows a list of commands or help for one command
+     server        Run as server mode
+     servers       Run as multiple servers mode
+     client        Run as client mode
+     tunnel        Run as tunnel mode on client-side
+     tproxy        Run as tproxy mode on client-side, transparent proxy, only works on Linux
+     vpn           Run as VPN mode on client-side
+     ssserver      Run as shadowsocks server mode, fixed method is aes-256-cfb
+     ssservers     Run as shadowsocks multiple servers mode, fixed method is aes-256-cfb
+     ssclient      Run as shadowsocks client mode, fixed method is aes-256-cfb
+     socks5        Run as raw socks5 server
+     relay         Run as relay mode
+     relays        Run as multiple relays mode
+     link          Print brook link
+     qr            Print brook server QR code
+     socks5tohttp  Convert socks5 to http proxy
+     systemproxy   Set system proxy with pac url, or remove, only works on MacOS/Windows
+     help, h       Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --debug, -d               Enable debug

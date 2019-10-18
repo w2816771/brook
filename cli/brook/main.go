@@ -1,7 +1,22 @@
+// Copyright (c) 2016-present Cloud <cloud@txthinking.com>
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of version 3 of the GNU General Public
+// License as published by the Free Software Foundation.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -19,7 +34,7 @@ var debugAddress string
 func main() {
 	app := cli.NewApp()
 	app.Name = "Brook"
-	app.Version = "20180909"
+	app.Version = "20190601"
 	app.Usage = "A Cross-Platform Proxy/VPN Software"
 	app.Author = "Cloud"
 	app.Email = "cloud@txthinking.com"
@@ -185,7 +200,7 @@ func main() {
 		},
 		cli.Command{
 			Name:  "tunnel",
-			Usage: "Run as tunnel mode",
+			Usage: "Run as tunnel mode on client-site",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "listen, l",
@@ -232,7 +247,7 @@ func main() {
 		},
 		cli.Command{
 			Name:  "tproxy",
-			Usage: "Run as tproxy mode, transparent proxy, only works on Linux",
+			Usage: "Run as tproxy mode on client-site, transparent proxy, only works on Linux",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "listen, l",
@@ -275,7 +290,7 @@ func main() {
 		},
 		cli.Command{
 			Name:  "vpn",
-			Usage: "Run as VPN mode",
+			Usage: "Run as VPN mode on client-site",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "listen, l",
@@ -283,11 +298,16 @@ func main() {
 				},
 				cli.StringFlag{
 					Name:  "server, s",
-					Usage: "Server address, must use IP, like: 1.2.3.4:1080",
+					Usage: "Server address, like: 1.2.3.4:1080",
 				},
 				cli.StringFlag{
 					Name:  "password, p",
 					Usage: "Server password",
+				},
+				cli.StringFlag{
+					Name:  "dns",
+					Value: "8.8.8.8",
+					Usage: "DNS Server, like: 8.8.8.8",
 				},
 				cli.IntFlag{
 					Name:  "tcpTimeout",
@@ -329,10 +349,6 @@ func main() {
 					Usage: "tun mask",
 					Value: "255.255.255.0",
 				},
-				cli.StringFlag{
-					Name:  "defaultGateway",
-					Usage: "Your default gateway, Only needed on windows that are not utf8 encoded.",
-				},
 			},
 			Action: func(c *cli.Context) error {
 				if c.String("listen") == "" || c.String("server") == "" || c.String("password") == "" {
@@ -342,153 +358,7 @@ func main() {
 				if debug {
 					enableDebug()
 				}
-				return brook.RunVPN(c.String("listen"), c.String("server"), c.String("password"), c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"), c.Int("udpSessionTime"), c.String("tunDevice"), c.String("tunIP"), c.String("tunGateway"), c.String("tunMask"), c.String("defaultGateway"))
-			},
-		},
-		cli.Command{
-			Name:  "streamserver",
-			Usage: "Run as server mode",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "listen, l",
-					Usage: "Server listen address, like: 0.0.0.0:1080",
-				},
-				cli.StringFlag{
-					Name:  "password, p",
-					Usage: "Server password",
-				},
-				cli.IntFlag{
-					Name:  "tcpTimeout",
-					Value: 60,
-					Usage: "connection tcp keepalive timeout (s)",
-				},
-				cli.IntFlag{
-					Name:  "tcpDeadline",
-					Value: 0,
-					Usage: "connection deadline time (s)",
-				},
-				cli.IntFlag{
-					Name:  "udpDeadline",
-					Value: 60,
-					Usage: "connection deadline time (s)",
-				},
-			},
-			Action: func(c *cli.Context) error {
-				if c.String("listen") == "" || c.String("password") == "" {
-					cli.ShowCommandHelp(c, "streamserver")
-					return nil
-				}
-				if debug {
-					enableDebug()
-				}
-				return brook.RunStreamServer(c.String("listen"), c.String("password"), c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"))
-			},
-		},
-		cli.Command{
-			Name:  "streamservers",
-			Usage: "Run as multiple servers mode",
-			Flags: []cli.Flag{
-				cli.StringSliceFlag{
-					Name:  "listenpassword, l",
-					Usage: "server and password, like '0.0.0.0:1080 password'",
-				},
-				cli.IntFlag{
-					Name:  "tcpTimeout",
-					Value: 60,
-					Usage: "connection tcp keepalive timeout (s)",
-				},
-				cli.IntFlag{
-					Name:  "tcpDeadline",
-					Value: 0,
-					Usage: "connection deadline time (s)",
-				},
-				cli.IntFlag{
-					Name:  "udpDeadline",
-					Value: 60,
-					Usage: "connection deadline time (s)",
-				},
-			},
-			Action: func(c *cli.Context) error {
-				if len(c.StringSlice("listenpassword")) == 0 {
-					cli.ShowCommandHelp(c, "streamservers")
-					return nil
-				}
-				if debug {
-					enableDebug()
-				}
-				errch := make(chan error)
-				go func() {
-					for _, v := range c.StringSlice("listenpassword") {
-						ss := strings.Split(v, " ")
-						if len(ss) != 2 {
-							errch <- errors.New("Invalid listenpassword")
-							return
-						}
-						go func() {
-							errch <- brook.RunStreamServer(ss[0], ss[1], c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"))
-						}()
-					}
-				}()
-				return <-errch
-			},
-		},
-		cli.Command{
-			Name:  "streamclient",
-			Usage: "Run as client mode",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "listen, l",
-					Usage: "Client listen address, like: 127.0.0.1:1080",
-				},
-				cli.StringFlag{
-					Name:  "ip, i",
-					Usage: "Client IP address, like: 127.0.0.1",
-				},
-				cli.StringFlag{
-					Name:  "server, s",
-					Usage: "Server address, like: 1.2.3.4:1080",
-				},
-				cli.StringFlag{
-					Name:  "password, p",
-					Usage: "Server password",
-				},
-				cli.IntFlag{
-					Name:  "tcpTimeout",
-					Value: 60,
-					Usage: "connection tcp keepalive timeout (s)",
-				},
-				cli.IntFlag{
-					Name:  "tcpDeadline",
-					Value: 0,
-					Usage: "connection deadline time (s)",
-				},
-				cli.IntFlag{
-					Name:  "udpDeadline",
-					Value: 60,
-					Usage: "connection deadline time (s)",
-				},
-				cli.IntFlag{
-					Name:  "udpSessionTime",
-					Value: 60,
-					Usage: "udp session time (s), in most cases need this",
-				},
-				cli.BoolFlag{
-					Name:  "http",
-					Usage: "If true, client start a http(s) proxy. default socks5",
-				},
-			},
-			Action: func(c *cli.Context) error {
-				if c.String("listen") == "" || c.String("ip") == "" || c.String("server") == "" || c.String("password") == "" {
-					cli.ShowCommandHelp(c, "streamclient")
-					return nil
-				}
-				if debug {
-					enableDebug()
-				}
-				if c.Bool("http") {
-					return brook.RunStreamClientAsHTTP(c.String("listen"), c.String("ip"), c.String("server"), c.String("password"), c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"), c.Int("udpSessionTime"))
-				}
-				return brook.RunStreamClient(c.String("listen"), c.String("ip"), c.String("server"), c.String("password"), c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"), c.Int("udpSessionTime"))
+				return brook.RunVPN(c.String("listen"), c.String("server"), c.String("password"), c.String("dns"), c.Int("tcpTimeout"), c.Int("tcpDeadline"), c.Int("udpDeadline"), c.Int("udpSessionTime"), c.String("tunDevice"), c.String("tunIP"), c.String("tunGateway"), c.String("tunMask"))
 			},
 		},
 		cli.Command{
@@ -777,6 +647,28 @@ func main() {
 			},
 		},
 		cli.Command{
+			Name:  "link",
+			Usage: "Print brook link",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "server, s",
+					Usage: "Server address, like: 1.2.3.4:1080",
+				},
+				cli.StringFlag{
+					Name:  "password, p",
+					Usage: "Server password",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				if c.String("server") == "" || c.String("password") == "" {
+					cli.ShowCommandHelp(c, "link")
+					return nil
+				}
+				fmt.Println(brook.Link(c.String("server"), c.String("password")))
+				return nil
+			},
+		},
+		cli.Command{
 			Name:  "qr",
 			Usage: "Print brook server QR code",
 			Flags: []cli.Flag{
@@ -788,17 +680,13 @@ func main() {
 					Name:  "password, p",
 					Usage: "Server password",
 				},
-				cli.BoolFlag{
-					Name:  "stream",
-					Usage: "Brook stream or not",
-				},
 			},
 			Action: func(c *cli.Context) error {
 				if c.String("server") == "" || c.String("password") == "" {
 					cli.ShowCommandHelp(c, "qr")
 					return nil
 				}
-				brook.QR(c.Bool("stream"), c.String("server"), c.String("password"))
+				brook.QR(c.String("server"), c.String("password"))
 				return nil
 			},
 		},
