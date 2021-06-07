@@ -15,22 +15,80 @@
 package brook
 
 import (
+	"errors"
+	"fmt"
+	"net/url"
 	"os"
+	"strings"
 
 	"github.com/mdp/qrterminal"
-	"github.com/txthinking/x"
+	"github.com/txthinking/encrypt"
 )
 
-// Link
-func Link(server, password string) string {
-	s := server + " " + password
-	s = "brook://" + x.URIEscape(s)
+// kind: brookserver/brookwsserver/brookwssserver/socks5server
+func Link(kind, s, username, password string) string {
+	v := url.Values{}
+	v.Set(kind, s)
+	v.Set("username", username)
+	v.Set("password", password)
+	s = fmt.Sprintf("brook://%s?%s", kind, v.Encode())
 	return s
 }
 
-// QR generate and print QR code.
-func QR(server, password string) {
-	s := server + " " + password
-	s = "brook://" + x.URIEscape(s)
-	qrterminal.GenerateHalfBlock(s, qrterminal.L, os.Stdout)
+func QR(kind, s, username, password string) {
+	qrterminal.GenerateHalfBlock(Link(kind, s, username, password), qrterminal.L, os.Stdout)
+}
+
+// kind: server/wsserver/wssserver/socks5
+func ParseLink(link string) (kind, s, username, password string, err error) {
+	var u *url.URL
+	u, err = url.Parse(link)
+	if err != nil {
+		return
+	}
+	kind = u.Host
+	s = u.Query().Get(kind)
+	username = u.Query().Get("username")
+	password = u.Query().Get("password")
+	return
+}
+
+// kind: server/wsserver/wssserver/socks5
+func ParseLinkOld(link string) (kind, server, username, password string, err error) {
+	if !strings.HasPrefix(link, "brook://") {
+		err = errors.New("Invalid brook link")
+		return
+	}
+	s := link[8:]
+	s, err = encrypt.URIUnescape(s)
+	if err != nil {
+		return
+	}
+	l := strings.Split(s, " ")
+	if len(l) == 1 {
+		kind = "socks5"
+		server = l[0]
+		return
+	}
+	if len(l) == 3 {
+		kind = "socks5"
+		server = l[0]
+		username = l[1]
+		password = l[2]
+		return
+	}
+	if len(l) == 2 {
+		kind = "server"
+		if strings.HasPrefix(l[0], "ws://") {
+			kind = "wsserver"
+		}
+		if strings.HasPrefix(l[0], "wss://") {
+			kind = "wssserver"
+		}
+		server = l[0]
+		password = l[1]
+		return
+	}
+	err = errors.New("Invalid brook link")
+	return
 }
